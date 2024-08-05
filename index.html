@@ -7,10 +7,31 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
 </head>
 <body>
-    <header>
-        <h1>Daily Mood Tracker</h1>
+    <header class="site-header">
+        <div class="logo-container">
+            <svg width="150" height="50" viewBox="0 0 150 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Carita verde feliz -->
+                <circle cx="25" cy="25" r="23" stroke="#4CAF50" stroke-width="4"/>
+                <circle cx="17" cy="20" r="3" fill="#4CAF50"/>
+                <circle cx="33" cy="20" r="3" fill="#4CAF50"/>
+                <path d="M15 32C15 32 20 38 25 38C30 38 35 32 35 32" stroke="#4CAF50" stroke-width="3" stroke-linecap="round"/>
+                <!-- Carita naranja seria -->
+                <circle cx="75" cy="25" r="23" stroke="#FF9800" stroke-width="4"/>
+                <circle cx="67" cy="20" r="3" fill="#FF9800"/>
+                <circle cx="83" cy="20" r="3" fill="#FF9800"/>
+                <path d="M65 32H85" stroke="#FF9800" stroke-width="3" stroke-linecap="round"/>
+                <!-- Carita azul triste -->
+                <circle cx="125" cy="25" r="23" stroke="#2196F3" stroke-width="4"/>
+                <circle cx="117" cy="20" r="3" fill="#2196F3"/>
+                <circle cx="133" cy="20" r="3" fill="#2196F3"/>
+                <path d="M115 38C115 38 120 32 125 32C130 32 135 38 135 38" stroke="#2196F3" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+        </div>
+        <h1 class="site-title">Daily Mood Tracker</h1>
+        <p class="site-subtitle">Registra y analiza tu estado de ánimo diario</p>
     </header>
     <main>
         <section id="mood-form">
@@ -40,7 +61,7 @@
                 </select>
                 <label for="gratitude">¿Por qué estás agradecido hoy?</label>
                 <textarea id="gratitude" placeholder="Escribe algo por lo que estés agradecido..."></textarea>
-                <textarea id="mood-note" placeholder="Notas adicionales (opcional)"></textarea>
+                <textarea id="mood-note" placeholder="Notas adicionales (¿Qué tal tu día?)"></textarea>
                 <button type="submit">Guardar</button>
             </form>
         </section>
