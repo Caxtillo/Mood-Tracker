@@ -2,9 +2,12 @@
 if ("Notification" in window) {
     Notification.requestPermission();
 }
-generateCharts();
+let moodChart = null;
+let energyStressChart = null;
 let currentDate = new Date();
 let selectedDate = new Date();
+generateCharts();
+
 
 // Función para guardar el estado de ánimo
 function saveMood(date, mood, energyLevel, stressLevel, sleepQuality, gratitude, note) {
@@ -206,7 +209,7 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Initialize Firebase (replace with your Firebase config)
+/* // Initialize Firebase (replace with your Firebase config)
 const firebaseConfig = {
     // Your Firebase configuration object
 };
@@ -239,10 +242,15 @@ messaging.onMessage((payload) => {
         body: payload.notification.body
     });
 });
+ */
 
 function generateCharts() {
     const moodData = JSON.parse(localStorage.getItem('moodData')) || {};
     const dates = Object.keys(moodData);
+    const textColor = getComputedStyle(document.body).getPropertyValue('--text-color').trim();
+    const borderColor = getComputedStyle(document.body).getPropertyValue('--border-color').trim();
+
+    Chart.defaults.borderColor = borderColor;
     
     if (dates.length === 0) {
         console.log('No hay datos de estado de ánimo para generar gráficos');
@@ -281,9 +289,56 @@ function generateCharts() {
         console.error('No se encontraron los elementos del canvas para los gráficos');
         return;
     }
-
+    if (moodChart) {
+        moodChart.destroy();
+    }
+    if (energyStressChart) {
+        energyStressChart.destroy();
+    }
+    const textSize=15;
+    const commonOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        size: textSize // Aumentar tamaño de la fuente de la leyenda
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    font: {
+                        size: textSize // Aumentar tamaño de la fuente del eje X
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Fecha',
+                    font: {
+                        size: textSize // Aumentar tamaño de la fuente del título del eje X
+                    }
+                }
+            },
+            y: {
+                ticks: {
+                    font: {
+                        size: textSize // Aumentar tamaño de la fuente del eje Y
+                    }
+                },
+                title: {
+                    display: true,
+                    font: {
+                        size: textSize // Aumentar tamaño de la fuente del título del eje Y
+                    }
+                }
+            }
+        }
+    };
     // Gráfico de estados de ánimo
-    new Chart(moodCtx, {
+    moodChart = new Chart(moodCtx, {
         type: 'bar',
         data: {
             labels: Object.keys(moodCounts),
@@ -301,12 +356,14 @@ function generateCharts() {
             }]
         },
         options: {
-            responsive: true,
+            ...commonOptions,
             scales: {
+                ...commonOptions.scales,
                 y: {
+                    ...commonOptions.scales.y,
                     beginAtZero: true,
                     title: {
-                        display: true,
+                        ...commonOptions.scales.y.title,
                         text: 'Cantidad de días'
                     }
                 }
@@ -315,7 +372,7 @@ function generateCharts() {
     });
 
     // Gráfico de energía, estrés y calidad de sueño
-    new Chart(energyStressCtx, {
+    energyStressChart = new Chart(energyStressCtx, {
         type: 'line',
         data: {
             labels: dates,
@@ -337,20 +394,16 @@ function generateCharts() {
             }]
         },
         options: {
-            responsive: true,
+            ...commonOptions,
             scales: {
+                ...commonOptions.scales,
                 y: {
+                    ...commonOptions.scales.y,
                     beginAtZero: true,
                     max: 10,
                     title: {
-                        display: true,
+                        ...commonOptions.scales.y.title,
                         text: 'Nivel (0-10)'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Fecha'
                     }
                 }
             }
@@ -389,8 +442,66 @@ function testWebNotification() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para exportar datos a JSON
+    function exportDataToJSON() {
+        const moodData = localStorage.getItem('moodData');
+        if (!moodData) {
+            alert('No hay datos para exportar.');
+            return;
+        }
+
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(moodData);
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "mood_tracker_data.json");
+        document.body.appendChild(downloadAnchorNode); // Requerido para Firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+    
+    // Función para importar datos desde JSON
+    function importDataFromJSON(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    localStorage.setItem('moodData', JSON.stringify(importedData));
+                    alert('Datos importados con éxito.');
+                    updateCalendar(); // Asegúrate de que esta función esté definida
+                } catch (error) {
+                    console.error('Error al importar datos:', error);
+                    alert('Error al importar datos. Asegúrate de que el archivo es válido.');
+                }
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    // Evento para el botón de exportar
+    const exportButton = document.getElementById('export-button');
+    if (exportButton) {
+        console.log('Botón de exportar encontrado, agregando event listener');
+        exportButton.addEventListener('click', function(e) {
+            console.log('Botón de exportar clickeado');
+            exportDataToJSON();
+        });
+    } else {
+        console.error('El botón de exportar no se encontró en el DOM');
+    }
+
+    // Evento para el input de importar
+    const importInput = document.getElementById('import-input');
+    if (importInput) {
+        importInput.addEventListener('change', importDataFromJSON);
+    } else {
+        console.error('El input de importar no se encontró en el DOM');
+    }
+});
 // Call this function when the page loads
-initializeFirebaseMessaging();
+// initializeFirebaseMessaging();
 
 selectedDate = new Date();
 updateCalendar();

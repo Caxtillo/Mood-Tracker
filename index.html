@@ -15,6 +15,7 @@
     <main>
         <section id="mood-form">
             <h2>¿Cómo te sientes hoy?</h2>
+
             <form id="mood-input">
                 <select id="mood-select" required>
                     <option value="">Selecciona tu estado de ánimo</option>
@@ -64,10 +65,18 @@
             <canvas id="mood-chart"></canvas>
             <canvas id="energy-stress-chart"></canvas>
         </div>
+        <div id="mood-data" class="section">
+            <h2>Gestión de Datos</h2>
+            <div id="data-management" class="section">
+                <button id="export-button">Exportar datos</button>
+                <label for="import-input" class="button">Importar Datos</label>
+                <input type="file" id="import-input" accept=".json" style="display: none;">
+            </div>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="app.js"></script>
-
+    <script src="theme-switcher.js"></script>
 </body>
 </html>
