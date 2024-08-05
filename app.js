@@ -371,8 +371,27 @@ function saveMood(date, mood, energyLevel, stressLevel, sleepQuality, gratitude,
     generateCharts();  // Llamar a generateCharts después de guardar
 }
 
+function testWebNotification() {
+    if ("Notification" in window) {
+        Notification.requestPermission().then(function (permission) {
+            if (permission === "granted") {
+                new Notification("Test de Notificación", {
+                    body: "Esta es una notificación de prueba para Daily Mood Tracker"
+                });
+            } else {
+                console.log("Permiso de notificación denegado");
+                alert("Permiso de notificación denegado. Por favor, habilita las notificaciones en la configuración de tu navegador.");
+            }
+        });
+    } else {
+        console.log("Este navegador no soporta notificaciones de escritorio");
+        alert("Tu navegador no soporta notificaciones de escritorio");
+    }
+}
+
 // Call this function when the page loads
 initializeFirebaseMessaging();
 
 selectedDate = new Date();
 updateCalendar();
+generateCharts();

@@ -181,7 +181,7 @@ button:hover {
     margin: 20px auto;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     body {
         padding: 10px;
     }
@@ -200,8 +200,8 @@ button:hover {
         margin: 5% auto;
     }
     #mood-chart, #energy-stress-chart {
-        width: 100%;
-        height: 300px;
-        margin: 20px auto;
+
+        height: 400px !important;
+
     }
 }
