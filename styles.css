@@ -203,6 +203,9 @@ button:hover {
     body {
         padding: 10px;
     }
+    h2{
+        font-size: 14px;
+    }
 
     .calendar-day {
         font-size: 14px;
