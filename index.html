@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Mood Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Daily Mood Tracker</h1>
+    </header>
+    <main>
+        <section id="mood-form">
+            <h2>¿Cómo te sientes hoy?</h2>
+            <form id="mood-input">
+                <select id="mood-select" required>
+                    <option value="">Selecciona tu estado de ánimo</option>
+                    <option value="feliz">😊 Feliz</option>
+                    <option value="triste">😢 Triste</option>
+                    <option value="enojado">😠 Enojado</option>
+                    <option value="neutral">😐 Neutral</option>
+                    <option value="emocionado">🤩 Emocionado</option>
+                    <option value="ansioso">😰 Ansioso</option>
+                </select>
+                <label for="energy-level">Nivel de energía (1-10):</label>
+                <input type="range" id="energy-level" min="1" max="10" value="5" step="1">
+                <label for="stress-level">Nivel de estrés (1-10):</label>
+                <input type="range" id="stress-level" min="1" max="10" value="5" step="1">
+                <label for="sleep-quality">Calidad del sueño:</label>
+                <select id="sleep-quality">
+                    <option value="Excelente">Excelente</option>
+                    <option value="Buena">Buena</option>
+                    <option value="Regular" selected>Regular</option>
+                    <option value="Mala">Mala</option>
+                    <option value="Pésima">Pésima</option>
+                </select>
+                <label for="gratitude">¿Por qué estás agradecido hoy?</label>
+                <textarea id="gratitude" placeholder="Escribe algo por lo que estés agradecido..."></textarea>
+                <textarea id="mood-note" placeholder="Notas adicionales (opcional)"></textarea>
+                <button type="submit">Guardar</button>
+            </form>
+        </section>
+        <section id="mood-calendar">
+            <h2>Calendario de estados de ánimo</h2>
+            <div id="calendar-controls">
+                <button id="prev-month">&lt; Mes anterior</button>
+                <span id="current-month"></span>
+                <button id="next-month">Mes siguiente &gt;</button>
+            </div>
+            <div id="calendar"></div>
+        </section>
+        <div id="mood-details" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Detalles del día</h3>
+                <div id="mood-details-content"></div>
+            </div>
+        </div>
+        <div id="mood-statistics" class="section">
+            <h2>Estadísticas de estado de ánimo</h2>
+            <canvas id="mood-chart"></canvas>
+            <canvas id="energy-stress-chart"></canvas>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>
